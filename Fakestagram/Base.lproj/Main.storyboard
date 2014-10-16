@@ -46,7 +46,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZBd-Ah-C15">
@@ -148,6 +148,7 @@
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="csU-1i-51X" firstAttribute="leading" secondItem="Sfd-2c-HNh" secondAttribute="leadingMargin" constant="-16" id="1zv-vo-WPG"/>
                             <constraint firstItem="ovy-XV-Kmd" firstAttribute="top" secondItem="csU-1i-51X" secondAttribute="bottom" id="Vch-oX-WvF"/>

@@ -15,6 +15,7 @@ protocol GalleryDelegate {
 class GalleryViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    var collectionViewOriginalHeight: CGFloat?
     
     var images = [UIImage]()
     var delegate: GalleryDelegate?
@@ -31,6 +32,12 @@ class GalleryViewController: UIViewController, UICollectionViewDataSource, UICol
         self.images.append(image2!)
         self.images.append(image3!)
         self.images.append(image4!)
+        
+        self.resetCollectionViewOriginalHeight()
+        
+        // Pinch Recognizer for collectionView
+        let pinch = UIPinchGestureRecognizer(target: self, action: "collectionViewPinched:")
+        self.collectionView.addGestureRecognizer(pinch)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -48,5 +55,24 @@ class GalleryViewController: UIViewController, UICollectionViewDataSource, UICol
         self.delegate?.didSelectImage(image)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-
+    
+    // MARK - Pinch Recognizer
+    func collectionViewPinched(pinch: UIPinchGestureRecognizer) {
+        var originalHeight = self.collectionViewOriginalHeight!
+        var currentHeight = self.collectionView.frame.height
+        
+        if ((pinch.velocity < 0 && currentHeight >= originalHeight * 0.5) || (pinch.velocity > 0 && currentHeight <= originalHeight * 2)) {
+            self.collectionView.transform = CGAffineTransformScale(self.collectionView.transform, pinch.scale, pinch.scale)
+        }
+        pinch.scale = 1
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.resetCollectionViewOriginalHeight()
+    }
+    
+    func resetCollectionViewOriginalHeight() {
+        self.collectionViewOriginalHeight = self.collectionView.frame.height
+    }
+    
 }
