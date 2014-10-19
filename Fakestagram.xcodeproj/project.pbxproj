@@ -10,6 +10,10 @@
 		4861C34419EF83F600271985 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4861C34319EF83F600271985 /* PhotosViewController.swift */; };
 		4861C34619EF849900271985 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4861C34519EF849900271985 /* PhotoCell.swift */; };
 		48B306F219EF4A05009FBF80 /* FilteredThumbnailConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B306F119EF4A05009FBF80 /* FilteredThumbnailConstructor.swift */; };
+		48C3157419F3423F00AEC154 /* AVCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C3157319F3423F00AEC154 /* AVCameraViewController.swift */; };
+		48C3157819F3595A00AEC154 /* camera-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 48C3157719F3595A00AEC154 /* camera-icon.png */; };
+		48C3157A19F365B000AEC154 /* ImageSelectionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C3157919F365B000AEC154 /* ImageSelectionProtocols.swift */; };
+		48C3157C19F3872700AEC154 /* image-placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 48C3157B19F3872700AEC154 /* image-placeholder.png */; };
 		48C5EA7D19EED512001DA332 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C5EA7C19EED512001DA332 /* AppDelegate.swift */; };
 		48C5EA8019EED512001DA332 /* Fakestagram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 48C5EA7E19EED512001DA332 /* Fakestagram.xcdatamodeld */; };
 		48C5EA8219EED512001DA332 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C5EA8119EED512001DA332 /* HomeViewController.swift */; };
@@ -42,6 +46,10 @@
 		4861C34319EF83F600271985 /* PhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		4861C34519EF849900271985 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		48B306F119EF4A05009FBF80 /* FilteredThumbnailConstructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredThumbnailConstructor.swift; sourceTree = "<group>"; };
+		48C3157319F3423F00AEC154 /* AVCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVCameraViewController.swift; sourceTree = "<group>"; };
+		48C3157719F3595A00AEC154 /* camera-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera-icon.png"; sourceTree = "<group>"; };
+		48C3157919F365B000AEC154 /* ImageSelectionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectionProtocols.swift; sourceTree = "<group>"; };
+		48C3157B19F3872700AEC154 /* image-placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-placeholder.png"; sourceTree = "<group>"; };
 		48C5EA7719EED512001DA332 /* Fakestagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fakestagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C5EA7B19EED512001DA332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48C5EA7C19EED512001DA332 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +116,7 @@
 				48C5EAA119EED906001DA332 /* Views */,
 				48C5EA7C19EED512001DA332 /* AppDelegate.swift */,
 				48C5EAA519EED9A5001DA332 /* CoreDataSeeder.swift */,
+				48C3157919F365B000AEC154 /* ImageSelectionProtocols.swift */,
 				48C5EA8319EED512001DA332 /* Main.storyboard */,
 				48C5EA8819EED512001DA332 /* LaunchScreen.xib */,
 				48C5EA8619EED512001DA332 /* Images.xcassets */,
@@ -121,6 +130,8 @@
 		48C5EA7A19EED512001DA332 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				48C3157B19F3872700AEC154 /* image-placeholder.png */,
+				48C3157719F3595A00AEC154 /* camera-icon.png */,
 				48C5EAB519EF1BD1001DA332 /* photo1.jpeg */,
 				48C5EAB619EF1BD1001DA332 /* photo2.jpeg */,
 				48C5EAB719EF1BD1001DA332 /* photo3.jpeg */,
@@ -163,6 +174,7 @@
 				48C5EA8119EED512001DA332 /* HomeViewController.swift */,
 				48C5EAA919EF1976001DA332 /* GalleryViewController.swift */,
 				4861C34319EF83F600271985 /* PhotosViewController.swift */,
+				48C3157319F3423F00AEC154 /* AVCameraViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -264,7 +276,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				48C5EABB19EF1BD1001DA332 /* photo3.jpeg in Resources */,
+				48C3157819F3595A00AEC154 /* camera-icon.png in Resources */,
 				48C5EABC19EF1BD1001DA332 /* photo4.jpeg in Resources */,
+				48C3157C19F3872700AEC154 /* image-placeholder.png in Resources */,
 				48C5EABA19EF1BD1001DA332 /* photo2.jpeg in Resources */,
 				48C5EA8519EED512001DA332 /* Main.storyboard in Resources */,
 				48C5EA8A19EED512001DA332 /* LaunchScreen.xib in Resources */,
@@ -297,7 +311,9 @@
 				48C5EA7D19EED512001DA332 /* AppDelegate.swift in Sources */,
 				48B306F219EF4A05009FBF80 /* FilteredThumbnailConstructor.swift in Sources */,
 				4861C34619EF849900271985 /* PhotoCell.swift in Sources */,
+				48C3157419F3423F00AEC154 /* AVCameraViewController.swift in Sources */,
 				4861C34419EF83F600271985 /* PhotosViewController.swift in Sources */,
+				48C3157A19F365B000AEC154 /* ImageSelectionProtocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

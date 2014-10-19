@@ -9,17 +9,13 @@
 import UIKit
 import Photos
 
-protocol PhotosDelegate {
-    func photoSelected(photo: UIImage)
-}
-
 class PhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var imageManager: PHCachingImageManager!
     var assets: PHFetchResult!
     var assetCollection: PHAssetCollection!
     var assetCellSize: CGSize!
-    var delegate: PhotosDelegate?
+    var delegate: ImageSelectorDelegate?
 
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -66,7 +62,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         let asset = self.assets[indexPath.row] as PHAsset
         self.imageManager.requestImageDataForAsset(asset, options: nil) { (imageData, dataUTI, orientation, info) -> Void in
             let photo = UIImage(data: imageData)
-            self.delegate?.photoSelected(photo!)
+            self.delegate?.imageSelected(photo!)
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }

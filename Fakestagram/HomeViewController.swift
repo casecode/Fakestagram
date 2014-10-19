@@ -10,8 +10,9 @@ import UIKit
 import CoreData
 import CoreImage
 import OpenGLES
+import AVFoundation
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, GalleryDelegate, PhotosDelegate {
+class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ImageSelectorDelegate {
     
     var managedObjectContext: NSManagedObjectContext!
     var originalThumbnail: UIImage?
@@ -19,10 +20,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     var filteredThumbnailConstructors = [FilteredThumbnailConstructor]()
     var gpuContext: CIContext?
     let imageQueue = NSOperationQueue()
-    var currentImageIsFiltered = false
+    var currentImage: UIImage?
 
+    
+    @IBOutlet weak var chooseImageButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var choosePhotoButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
     // Constraints
@@ -40,6 +42,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         self.fetchFilters()
         self.setGPUContext()
+        
+        self.imageView.image = UIImage(named: "image-placeholder")
         
         self.collectionView.dataSource = self
     }
@@ -72,7 +76,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // Create thumbnail of currently selected image
         var size = CGSize(width: 100, height: 100)
         UIGraphicsBeginImageContext(size)
-        self.imageView.image?.drawInRect(CGRect(x: 0, y: 0, width: 100, height: 100))
+        self.currentImage?.drawInRect(CGRect(x: 0, y: 0, width: 100, height: 100))
         self.originalThumbnail = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -86,8 +90,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.collectionView.reloadData()
     }
     
-    // When choosePhotoButton pressed, add action sheet with options for choosing photo
-    @IBAction func choosePhotoButtonPressed(sender: AnyObject) {
+    // When image pressed, add action sheet with options for choosing photo
+    @IBAction func chooseImageButtonPressed(sender: AnyObject) {
         // Set up action sheet
         let alertController = UIAlertController(title: nil, message: "Choose an option", preferredStyle: UIAlertControllerStyle.ActionSheet)
         
@@ -103,8 +107,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
         alertController.addAction(galleryAction)
         
-        // Camera Action
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default) { (action) -> Void in
+        // ImagePicker Action
+        let imagePickerAction = UIAlertAction(title: "Image Picker", style: UIAlertActionStyle.Default) { (action) -> Void in
             let imagePicker = UIImagePickerController()
             imagePicker.allowsEditing = true
             if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
@@ -115,12 +119,21 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             imagePicker.delegate = self
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
-        alertController.addAction(cameraAction)
+        alertController.addAction(imagePickerAction)
+        
+        // AVCamera Action
+        let AVDevices = AVCaptureDevice.devices()
+        if !AVDevices.isEmpty {
+            let AVCameraAction = UIAlertAction(title: "AV Camera", style: UIAlertActionStyle.Default) { (action) -> Void in
+                self.performSegueWithIdentifier("SHOW_AV_CAMERA", sender: self)
+            }
+            alertController.addAction(AVCameraAction)
+        }
         
         // Filter action
         // Only allow filtering if there is an image and if that image is not already filtered
-        if self.imageView.image != nil && self.currentImageIsFiltered == false {
-            let filterAction = UIAlertAction(title: "Filter Current Image", style: UIAlertActionStyle.Default) { (action) -> Void in
+        if self.currentImage != nil {
+            let filterAction = UIAlertAction(title: "Image Filter", style: UIAlertActionStyle.Default) { (action) -> Void in
                 self.enterFilterMode()
             }
             alertController.addAction(filterAction)
@@ -141,33 +154,32 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         } else if segue.identifier == "SHOW_PHOTOS" {
             let photosVC = segue.destinationViewController as PhotosViewController
             photosVC.delegate = self
+        } else if segue.identifier == "SHOW_AV_CAMERA" {
+            let AVCameraVC = segue.destinationViewController as AVCameraViewController
+            AVCameraVC.delegate = self
         }
     }
     
     // MARK - Filtering
     func enterFilterMode() {
-        self.imageViewLeadingConstraint.constant *= 4
-        self.imageViewTrailingConstraint.constant *= 4
+        self.chooseImageButton.hidden = true
+
         self.imageViewBottomConstraint.constant += 150
-        self.collectionViewBottomConstraint.constant = 75
-        
-        self.choosePhotoButton.hidden = true
+        self.collectionViewBottomConstraint.constant = 8
         
         UIView.animateWithDuration(1.0, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
         
-        var barButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "exitFilterMode")
+        var barButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Done, target: self, action: "exitFilterMode")
         self.navigationItem.rightBarButtonItem = barButton
     }
     
     func exitFilterMode() {
-        self.imageViewLeadingConstraint.constant /= 4
-        self.imageViewTrailingConstraint.constant /= 4
+        self.chooseImageButton.hidden = false
+
         self.imageViewBottomConstraint.constant -= 150
-        self.collectionViewBottomConstraint.constant = -150
-        
-        self.choosePhotoButton.hidden = false
+        self.collectionViewBottomConstraint.constant = -200
         
         UIView.animateWithDuration(1.0, animations: { () -> Void in
             self.view.layoutIfNeeded()
@@ -179,7 +191,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     // MARK - UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         self.imageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
-        self.currentImageIsFiltered = false
         self.dismissViewControllerAnimated(true, completion: nil)
         self.resetThumbnails()
     }
@@ -230,7 +241,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             // Resolve callback on main thread
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 self.imageView.image = filteredImage
-                self.currentImageIsFiltered = true
                 self.exitFilterMode()
                 self.resetThumbnails()
                 self.collectionView.reloadData()
@@ -238,17 +248,10 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    // MARK - GalleryDelegate
-    func didSelectImage(image: UIImage) {
+    // MARK - ImageSelectorDelegate
+    func imageSelected(image: UIImage) {
         self.imageView.image = image
-        self.currentImageIsFiltered = false
-        self.resetThumbnails()
-    }
-    
-    // MARK - PhotosDelegate
-    func photoSelected(photo: UIImage) {
-        self.imageView.image = photo
-        self.currentImageIsFiltered = false
+        self.currentImage = image
         self.resetThumbnails()
     }
     
